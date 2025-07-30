@@ -141,25 +141,55 @@ made in Norway 🇳🇴
 * [reporting bugs](#reporting-bugs) - ideas for context to include, and where to submit them
 * [devnotes](#devnotes) - for build instructions etc, see [./docs/devnotes.md](./docs/devnotes.md)
 
-
 ## quickstart
 
-just run **[copyparty-sfx.py](https://github.com/9001/copyparty/releases/latest/download/copyparty-sfx.py)** -- that's it! 🎉
+ **1. Run Copyparty**
+ ```bash
+ curl -O https://github.com/9001/copyparty/releases/latest/download/copyparty-sfx.py
+ python copyparty-sfx.py
+ ```
+ Or use the Windows binary:
+ ```plaintext
+ https://github.com/9001/copyparty/releases/latest/download/copyparty.exe
+ ```
+ Then open: http://127.0.0.1:3923
 
-* or install through [pypi](https://pypi.org/project/copyparty/): `python3 -m pip install --user -U copyparty`
-* or if you cannot install python, you can use [copyparty.exe](#copypartyexe) instead
-* or install [on arch](#arch-package) ╱ [on NixOS](#nixos-module) ╱ [through nix](#nix-package)
-* or if you are on android, [install copyparty in termux](#install-on-android)
-* or maybe you have a [synology nas / dsm](./docs/synology-dsm.md)
-* or if your computer is messed up and nothing else works, [try the pyz](#zipapp)
-* or if your OS is dead, give the [bootable flashdrive / cd-rom](https://a.ocv.me/pub/stuff/edcd001/enterprise-edition/) a spin
-* or if you don't trust copyparty yet and want to isolate it a little, then...
-  * ...maybe [prisonparty](./bin/prisonparty.sh) to create a tiny [chroot](https://wiki.archlinux.org/title/Chroot) (very portable),
-  * ...or [bubbleparty](./bin/bubbleparty.sh) to wrap it in [bubblewrap](https://github.com/containers/bubblewrap) (much better)
-* or if you prefer to [use docker](./scripts/docker/) 🐋 you can do that too
-  * docker has all deps built-in, so skip this step:
+ **2. Basic Usage**
+ By default, the current directory is shared with full read/write access.
 
-enable thumbnails (images/audio/video), media indexing, and audio transcoding by installing some recommended deps:
+ **3. Use a Config File (Recommended)**
+ Create `config.conf`:
+ ```yaml
+ [accounts]
+   alice: secret123
+   bob: hunter2
+
+ [/]
+   ./shared
+   accs:
+     r: alice, bob
+     rw: alice
+
+ [/drop]
+   ./dropbox
+   accs:
+     w: bob
+ ```
+ Start with:
+ ```bash
+ python copyparty-sfx.py -c config.conf
+ ```
+
+ **4. Install Extras (Optional)**
+ Ubuntu/Debian: `sudo apt install python3-pil ffmpeg`
+ Windows: `pip install --user Pillow` + add FFmpeg to PATH
+
+**5. Expose Publicly (Optional)**
+```bash
+cloudflared tunnel --url http://127.0.0.1:3923
+```
+
+Enable thumbnails (images/audio/video), media indexing, and audio transcoding by installing some recommended deps:
 
 * **Alpine:** `apk add py3-pillow ffmpeg`
 * **Debian:** `apt install --no-install-recommends python3-pil ffmpeg`
